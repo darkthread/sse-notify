@@ -1,1 +1,1 @@
-# sse-notify
+﻿# [程式說明](https://blog.darkthread.net/blog/sse-notify-example/)

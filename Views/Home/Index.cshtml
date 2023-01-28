@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 id="h" class="display-4">Welcome</h1>
+    <button id="btn" onclick="showQRCode()">Scan QR Code</button>
+</div>
+<script>
+    var qrCodeWin;
+    var source = new EventSource('/sse/@ViewBag.Token');
+    function showResult(msg, error) {
+        qrCodeWin && qrCodeWin.close();
+        document.getElementById('btn').remove();
+        let h = document.getElementById('h');
+        h.innerText = msg;
+        if (error) h.style.color = 'red';
+    }
+    source.onmessage = function (event) {
+        showResult(event.data);
+    };
+    source.onerror = function (event) {
+        showResult(event.data, true);
+    };
+    function showQRCode() {
+        qrCodeWin = window.open('@Url.Content($"~/Home/QRCode/{ViewBag.Token}")', '_blank', 'width=300,height=300');
+    }
+
+</script>

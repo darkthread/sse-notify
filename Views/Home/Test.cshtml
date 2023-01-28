@@ -1,0 +1,25 @@
+﻿@{
+}
+<div class="text-center">
+    <img id="qrc" src="@ViewBag.QRCodePng" alt="QR Code" />
+    <div id="msg">
+        Timeout: <span id="t">@ViewBag.TimeoutSecs</span>s
+    </div>
+</div>
+<script>
+    var source = new EventSource('/sse/@ViewBag.Token');
+
+    source.onmessage = function (event) {
+        location.href = '@Url.Action("Succ", "Home")';
+    };
+    source.onerror = function (event) {
+        document.getElementById('qrc').remove();
+        document.getElementById('msg').innerText = event.data;
+    };
+    var timeout = @ViewBag.TimeoutSecs;
+    var h = setInterval(function () {
+        timeout--;
+        document.getElementById('t').innerText = timeout;
+        if (timeout == 0) clearInterval(h);
+    }, 1000);
+</script>
